@@ -24,18 +24,22 @@ const initializePusher = async () => {
   }
 };
 
-initializePusher();
-
-const subscribeToChannel = async () => {
+const subscribeToChannel = async (channelName, onEventCallback) => {
   await pusher.subscribe({
-    channelName: 'my-channel',
-    onEvent: (event: PusherEvent) => {
+    channelName,
+    onEvent: (event) => {
       console.log(`Event received: ${event}`);
       console.log('channelName', event.channelName);
       console.log('eventName', event.eventName);
       console.log('data', event.data);
+      onEventCallback(event);
     },
   });
 };
 
-export {subscribeToChannel};
+const unsubscribeFromChannel = (channelName) => {
+  pusher.unsubscribe(channelName);
+};
+
+export { initializePusher, subscribeToChannel, unsubscribeFromChannel };
+
